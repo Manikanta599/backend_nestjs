@@ -38,6 +38,14 @@ export class PServiceService {
       const savedNames = savedEntities.map(entity => entity.name);
   
       console.log('Details saved successfully:', savedNames);
+      if(savedNames.length>0)
+      {
+        console.log("records saved")
+      }
+      else
+      {
+        console.log("not saved..")
+      }
       return savedNames;
     } catch (error) {
       console.error('Error saving details:', error.message);
@@ -47,7 +55,9 @@ export class PServiceService {
   
 
   async deleteDetails(id: number): Promise<void> {
+    
     try {
+      console.log("in delete service.. ",id)
       const result = await this.proRepository.delete(id);
       console.log('Details Deleted successfully:', result);
     } catch (error) {

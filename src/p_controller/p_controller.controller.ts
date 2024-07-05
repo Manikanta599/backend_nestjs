@@ -1,4 +1,4 @@
-import { Controller, Delete, Get, Post, Body, Query, Req, Res } from '@nestjs/common';
+import { Controller, Delete, Get, Post, Body, Query, Req, Res, ParseIntPipe, Param } from '@nestjs/common';
 import { PServiceService } from 'src/p_service/p_service.service';
 import { Request, Response } from 'express';
 import { DetailsDto } from 'src/DTOs/populationdto';
@@ -8,7 +8,18 @@ export class PControllerController {
   constructor(private readonly pService: PServiceService) {}
 
   @Get('get')
-  async getDetails(@Query('q') q: string, @Res() res: Response) {
+async getDetails(@Res() res: Response) {
+  try {
+    const data = await this.pService.getdetails();
+    res.send(data);
+  } catch (error) {
+    res.status(500).send("Error in getting details.");
+  }
+}
+
+
+  @Get('getf')
+  async getDetailsf(@Query('q') q: string, @Res() res: Response) {
     try {
       const data = await this.pService.getdetails();
       const keys = ['name'];
@@ -60,9 +71,10 @@ export class PControllerController {
     }, 2000);
   }
 
-  @Delete('delete')
-  async deleteDetails(@Body('id') id: number, @Res() res: Response) {
+  @Delete(':id')
+  async deleteDetails(@Param('id') id: number, @Res() res: Response) {
     try {
+      console.log("in deletecontroller.. ",id)
       const result = await this.pService.deleteDetails(id);
       res.send(result);
     } catch (error) {
